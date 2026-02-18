@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scot Pilie — New Orleans</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Libre+Baskerville:ital@0;1&family=Oswald:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --deep-purple: #2B1A3A;
+    --cream: #F5EFE0;
+    --moss: #3B5323;
+    --red: #A0200F;
+    --iron: #1A1A2E;
+    --bar-blue: #2B4A7A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--iron);
+    color: var(--cream);
+    font-family: 'Libre Baskerville', serif;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Ctext x='30' y='42' text-anchor='middle' font-size='28' fill='%23C9A84C' opacity='0.04'%3E⚜%3C/text%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 54px 20px 36px;
+    background: linear-gradient(180deg, rgba(43,26,58,0.95) 0%, rgba(26,26,46,0) 100%);
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+  }
+
+  .fleur { font-size: 1.6rem; color: var(--gold); letter-spacing: 20px; display: block; margin-bottom: 10px; }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 900;
+    line-height: 0.9;
+    color: var(--cream);
+    text-shadow: 0 2px 30px rgba(201,168,76,0.4);
+  }
+
+  header h1 em { font-style: italic; color: var(--gold); display: block; }
+
+  .tagline {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 300;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    color: rgba(245,239,224,0.55);
+    margin-top: 14px;
+  }
+
+  .social-links {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .social-links a {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    border: 1px solid rgba(201,168,76,0.4);
+    padding: 7px 18px;
+    transition: all 0.3s;
+  }
+
+  .social-links a:hover { background: var(--gold); color: var(--iron); }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(26,26,46,0.97);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--gold);
+    display: flex;
+    justify-content: center;
+  }
+
+  nav button {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    color: rgba(245,239,224,0.55);
+    padding: 15px 26px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+  }
+
+  nav button:hover, nav button.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* ── PAGES ── */
+  .page { display: none; position: relative; z-index: 1; }
+  .page.active { display: block; animation: fadeUp 0.35s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ══════════════════════════════════════════════
+     FILTER BAR
+  ══════════════════════════════════════════════ */
+  .filter-bar {
+    background: rgba(43,26,58,0.6);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    padding: 14px 20px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .filter-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(201,168,76,0.6);
+    white-space: nowrap;
+    min-width: 105px;
+  }
+
+  .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .chip {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.66rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+    color: rgba(245,239,224,0.6);
+    padding: 5px 12px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .chip:hover { border-color: rgba(201,168,76,0.6); color: var(--cream); }
+
+  .chip.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--iron);
+    font-weight: 600;
+  }
+
+  .chip[data-category="Date Night"].active { background: #c94c7a; border-color: #c94c7a; color: #fff; }
+  .chip[data-category="LGBT+ Owned"].active { background: #7c3aed; border-color: #9b59b6; color: #fff; }
+  .chip[data-category="Minority Owned"].active { background: #1e7a4a; border-color: #27ae60; color: #fff; }
+  .chip[data-category="Late Night"].active { background: #1e1e6e; border-color: #4f46e5; color: #c7d2fe; }
+  .chip[data-category="Brunch"].active { background: #c47a3a; border-color: #e67e22; color: #fff; }
+  .chip[data-category="Live Music"].active { background: #5c2d91; border-color: #9b59b6; color: #fff; }
+  .chip[data-category="Outdoor Seating"].active { background: var(--moss); border-color: #4a8a30; color: #fff; }
+
+  .filter-row-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .filter-results-count {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(201,168,76,0.5);
+    white-space: nowrap;
+  }
+
+  .clear-filters {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(245,239,224,0.35);
+    background: none;
+    border: 1px solid rgba(245,239,224,0.15);
+    cursor: pointer;
+    padding: 4px 10px;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .clear-filters:hover { color: var(--gold); border-color: rgba(201,168,76,0.4); }
+  .clear-filters.hidden { display: none; }
+
+  /* ══════════════════════════════════════════════
+     MAP + SIDEBAR LAYOUT
+  ══════════════════════════════════════════════ */
+  .map-layout {
+    display: grid;
+    grid-template-columns: 1fr 330px;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+    gap: 20px;
+    align-items: start;
+  }
+
+  @media (max-width: 860px) { .map-layout { grid-template-columns: 1fr; } }
+
+  .nola-map-wrap {
+    position: relative;
+    background: #1e2d1a;
+    border: 1px solid rgba(201,168,76,0.22);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .nola-map-wrap svg.basemap { width: 100%; height: 560px; display: block; }
+
+  .neighborhood-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    fill: rgba(201,168,76,0.42);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  .river-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 12px;
+    fill: rgba(100,160,255,0.42);
+    font-style: italic;
+  }
+
+  /* Pins */
+  .pin {
+    cursor: pointer;
+    transition: transform 0.18s, opacity 0.25s;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+
+  .pin:hover { transform: scale(1.35); }
+  .pin.dimmed { opacity: 0.12; pointer-events: none; }
+  .pin.highlighted { transform: scale(1.25); }
+
+  .pin circle.outer { stroke: var(--gold); stroke-width: 2; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)); }
+  .pin.food circle.outer { fill: #A0200F; }
+  .pin.bar circle.outer { fill: #2B4A7A; }
+  .pin.culture circle.outer { fill: #3B5323; }
+  .pin circle.inner { fill: var(--cream); }
+
+  .pin-tooltip {
+    position: absolute;
+    background: var(--deep-purple);
+    border: 1px solid var(--gold);
+    padding: 4px 10px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    color: var(--cream);
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 50;
+    display: none;
+  }
+
+  .map-legend {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .legend-item { display: flex; align-items: center; gap: 6px; opacity: 0.6; }
+  .legend-dot { width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid var(--gold); }
+  .legend-dot.food { background: #A0200F; }
+  .legend-dot.bar { background: #2B4A7A; }
+  .legend-dot.culture { background: #3B5323; }
+
+  /* ══════════════════════════════════════════════
+     SIDEBAR
+  ══════════════════════════════════════════════ */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(201,168,76,0.18);
+    max-height: 600px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201,168,76,0.25) transparent;
+    position: sticky;
+    top: 72px;
+  }
+
+  .sidebar-header {
+    background: rgba(43,26,58,0.9);
+    padding: 12px 15px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    border-bottom: 1px solid rgba(201,168,76,0.18);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .sidebar-count { opacity: 0.5; }
+
+  .loc-card {
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(201,168,76,0.08);
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    gap: 11px;
+    align-items: flex-start;
+  }
+
+  .loc-card:hover { background: rgba(201,168,76,0.07); }
+  .loc-card.active-card { background: rgba(201,168,76,0.1); border-left: 3px solid var(--gold); padding-left: 11px; }
+  .loc-card.filtered-out { display: none; }
+
+  .loc-emoji { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+  .loc-info { flex: 1; min-width: 0; }
+
+  .loc-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    color: var(--cream);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .loc-neighborhood {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.65;
+    margin-top: 3px;
+  }
+
+  .loc-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 5px; }
+
+  .loc-tag {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 2px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+
+  .loc-tag.Happy-Hour  { color: #e8a020; border-color: rgba(232,160,32,0.35); background: rgba(232,160,32,0.07); }
+  .loc-tag.Date-Night  { color: #e87fa0; border-color: rgba(232,127,160,0.35); background: rgba(232,127,160,0.07); }
+  .loc-tag.LGBT-Owned  { color: #c084fc; border-color: rgba(192,132,252,0.35); background: rgba(192,132,252,0.07); }
+  .loc-tag.Minority-Owned { color: #4ade80; border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.06); }
+  .loc-tag.Late-Night  { color: #818cf8; border-color: rgba(129,140,248,0.32); background: rgba(129,140,248,0.06); }
+  .loc-tag.Brunch      { color: #fb923c; border-color: rgba(251,146,60,0.32); background: rgba(251,146,60,0.06); }
+  .loc-tag.Live-Music  { color: #e879f9; border-color: rgba(232,121,249,0.32); background: rgba(232,121,249,0.06); }
+  .loc-tag.Outdoor-Seating { color: #86efac; border-color: rgba(134,239,172,0.28); background: rgba(134,239,172,0.05); }
+
+  .no-results {
+    padding: 36px 16px;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(245,239,224,0.28);
+    display: none;
+  }
+
+  /* ══════════════════════════════════════════════
+     MODAL
+  ══════════════════════════════════════════════ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,5,20,0.9);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal-box {
+    background: var(--deep-purple);
+    border: 2px solid var(--gold);
+    max-width: 580px;
+    width: 100%;
+    animation: modalIn 0.28s ease;
+  }
+
+  @keyframes modalIn {
+    from { transform: translateY(18px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-header {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid rgba(201,168,76,0.18);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .modal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--gold); }
+
+  .modal-header .meta {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(245,239,224,0.38);
+    margin-top: 4px;
+  }
+
+  .modal-close {
+    background: none; border: none; color: var(--gold);
+    font-size: 1.4rem; cursor: pointer; padding: 0 0 0 14px; flex-shrink: 0;
+  }
+
+  .modal-cats {
+    padding: 8px 20px 10px;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    min-height: 36px;
+  }
+
+  .modal-video-area {
+    background: #0a0510;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 28px;
+    text-align: center;
+  }
+
+  .modal-video-area .big-emoji { font-size: 3.5rem; }
+
+  .modal-video-area p {
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    opacity: 0.45;
+  }
+
+  .modal-link-btn {
+    display: inline-block;
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 3px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: var(--iron);
+    padding: 12px 26px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.2s;
+    margin-top: 4px;
+  }
+
+  .modal-link-btn:hover { opacity: 0.85; }
+
+  .modal-footer { padding: 14px 20px 18px; border-top: 1px solid rgba(201,168,76,0.12); }
+  .modal-footer p { font-size: 0.82rem; line-height: 1.65; opacity: 0.65; font-style: italic; }
+
+  /* ══════════════════════════════════════════════
+     DAY TRIPS
+  ══════════════════════════════════════════════ */
+  .map-intro { text-align: center; padding: 44px 20px 24px; }
+
+  .map-intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .map-intro p { margin-top: 10px; opacity: 0.6; font-size: 0.9rem; max-width: 480px; margin-inline: auto; }
+
+  .itinerary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+
+  .trip-card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid rgba(201,168,76,0.14);
+    aspect-ratio: 4/3;
+    background: var(--deep-purple);
+  }
+
+  .trip-card-bg {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 7rem; opacity: 0.12;
+    transition: transform 0.4s;
+  }
+
+  .trip-card:hover .trip-card-bg { transform: scale(1.08); }
+
+  .trip-card-content {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 26px 20px 20px;
+    background: linear-gradient(0deg, rgba(26,26,46,0.97) 60%, transparent);
+  }
+
+  .trip-card-content h3 { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-style: italic; color: var(--gold); }
+  .trip-card-content p { margin-top: 4px; font-size: 0.72rem; opacity: 0.5; font-family: 'Oswald', sans-serif; letter-spacing: 2px; text-transform: uppercase; }
+
+  .trip-card-content .explore-btn {
+    margin-top: 10px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); border: 1px solid var(--gold);
+    padding: 6px 14px; display: inline-block;
+    opacity: 0; transition: opacity 0.3s;
+  }
+
+  .trip-card:hover .explore-btn { opacity: 1; }
+
+  .itinerary-detail { max-width: 1060px; margin: 0 auto; padding: 34px 20px 80px; }
+
+  .itinerary-detail-header {
+    text-align: center; padding-bottom: 32px;
+    border-bottom: 1px solid rgba(201,168,76,0.18);
+    margin-bottom: 32px;
+  }
+
+  .itinerary-detail-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.2rem); font-style: italic; color: var(--gold); }
+  .itinerary-detail-header p { margin-top: 10px; opacity: 0.6; max-width: 540px; margin-inline: auto; line-height: 1.7; }
+
+  .back-btn {
+    font-family: 'Oswald', sans-serif; font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); background: none; border: 1px solid rgba(201,168,76,0.32);
+    padding: 8px 18px; cursor: pointer; margin-bottom: 26px; transition: all 0.3s;
+  }
+
+  .back-btn:hover { background: var(--gold); color: var(--iron); }
+
+  .itinerary-stops { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  @media (max-width: 680px) { .itinerary-stops { grid-template-columns: 1fr; } }
+
+  .stop-item { display: flex; gap: 13px; padding: 16px 0; border-bottom: 1px solid rgba(201,168,76,0.09); transition: background 0.15s; }
+  .stop-item:hover { background: rgba(201,168,76,0.05); padding-inline: 8px; margin-inline: -8px; }
+
+  .stop-number {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--gold); color: var(--iron);
+    font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 0.82rem;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  .stop-info h4 { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--cream); }
+
+  .stop-time { font-family: 'Oswald', sans-serif; font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-top: 3px; opacity: 0.75; }
+
+  .stop-info p { font-size: 0.78rem; opacity: 0.55; margin-top: 5px; line-height: 1.6; font-style: italic; }
+
+  .watch-link {
+    margin-top: 6px; display: inline-block;
+    font-family: 'Oswald', sans-serif; font-size: 0.62rem; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--gold); text-decoration: none; opacity: 0.75;
+  }
+
+  .watch-link:hover { opacity: 1; }
+
+  .route-map { background: #1a2b18; border: 1px solid rgba(201,168,76,0.18); min-height: 360px; }
+  .route-map svg { width: 100%; height: 360px; }
+
+  /* ── ABOUT ── */
+  .about-page { max-width: 760px; margin: 52px auto; padding: 0 20px 80px; text-align: center; }
+  .about-page .big-fleur { font-size: 3.2rem; color: var(--gold); opacity: 0.25; }
+
+  .about-page h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3rem); font-style: italic; color: var(--gold); margin-top: 8px; }
+  .about-page .divider { width: 70px; height: 2px; background: var(--gold); margin: 18px auto; opacity: 0.32; }
+  .about-page p { line-height: 1.8; opacity: 0.72; font-size: 0.94rem; margin-bottom: 16px; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin: 34px 0; }
+
+  .stat-box { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.14); padding: 26px 12px; }
+  .stat-box .num { font-family: 'Playfair Display', serif; font-size: 2.3rem; color: var(--gold); font-weight: 900; }
+  .stat-box .label { font-family: 'Oswald', sans-serif; font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase; opacity: 0.42; margin-top: 5px; }
+
+  .contact-area { margin-top: 34px; background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.16); padding: 34px; }
+  .contact-area h3 { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-style: italic; color: var(--gold); margin-bottom: 12px; }
+
+  .contact-area a {
+    display: inline-block; margin-top: 14px;
+    font-family: 'Oswald', sans-serif; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+    background: var(--gold); color: var(--iron); padding: 12px 28px; text-decoration: none; font-weight: 600;
+  }
+
+  footer {
+    text-align: center; padding: 26px;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    font-family: 'Oswald', sans-serif; font-size: 0.62rem; letter-spacing: 3px;
+    text-transform: uppercase; opacity: 0.3; position: relative; z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="fleur">⚜ ⚜ ⚜</span>
+  <h1>Scot <em>Pilie</em></h1>
+  <p class="tagline">New Orleans Food, Drink & Culture — As Seen On Your Feed</p>
+  <div class="social-links">
+    <a href="https://www.instagram.com/scotpilie" target="_blank">▶ Instagram</a>
+    <a href="https://www.tiktok.com/@scotpilie" target="_blank">▶ TikTok</a>
+  </div>
+</header>
+
+<nav>
+  <button class="active" onclick="showPage('map',this)">⚜ The Map</button>
+  <button onclick="showPage('daytrips',this)">Day Trips</button>
+  <button onclick="showPage('about',this)">About</button>
+</nav>
+
+<!-- ════════════ MAP PAGE ════════════ -->
+<div id="page-map" class="page active">
+
+  <div class="filter-bar">
+    <div class="filter-inner">
+
+      <div class="filter-row">
+        <span class="filter-label">Neighborhood</span>
+        <div class="filter-chips" id="hood-chips">
+          <div class="chip active" data-hood="all"           onclick="toggleHood(this)">All</div>
+          <div class="chip" data-hood="French Quarter"       onclick="toggleHood(this)">French Quarter</div>
+          <div class="chip" data-hood="Garden District"      onclick="toggleHood(this)">Garden District</div>
+          <div class="chip" data-hood="Marigny"              onclick="toggleHood(this)">Marigny</div>
+          <div class="chip" data-hood="Bywater"              onclick="toggleHood(this)">Bywater</div>
+          <div class="chip" data-hood="CBD"                  onclick="toggleHood(this)">CBD</div>
+          <div class="chip" data-hood="Uptown"               onclick="toggleHood(this)">Uptown</div>
+          <div class="chip" data-hood="Mid-City"             onclick="toggleHood(this)">Mid-City</div>
+          <div class="chip" data-hood="Tremé"                onclick="toggleHood(this)">Tremé</div>
+        </div>
+        <div class="filter-row-right">
+          <span class="filter-results-count" id="results-count"></span>
+          <button class="clear-filters hidden" id="clear-btn" onclick="clearFilters()">✕ Clear All</button>
+        </div>
+      </div>
+
+      <div class="filter-row">
+        <span class="filter-label">Categories</span>
+        <div class="filter-chips" id="cat-chips">
+          <div class="chip" data-category="Happy Hour"      onclick="toggleCat(this)">🍺 Happy Hour</div>
+          <div class="chip" data-category="Date Night"      onclick="toggleCat(this)">🕯 Date Night</div>
+          <div class="chip" data-category="Brunch"          onclick="toggleCat(this)">🥂 Brunch</div>
+          <div class="chip" data-category="Late Night"      onclick="toggleCat(this)">🌙 Late Night</div>
+          <div class="chip" data-category="Live Music"      onclick="toggleCat(this)">🎷 Live Music</div>
+          <div class="chip" data-category="Outdoor Seating" onclick="toggleCat(this)">🌿 Outdoor Seating</div>
+          <div class="chip" data-category="LGBT+ Owned"     onclick="toggleCat(this)">🏳️‍🌈 LGBT+ Owned</div>
+          <div class="chip" data-category="Minority Owned"  onclick="toggleCat(this)">✊ Minority Owned</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="map-layout">
+    <!-- MAP -->
+    <div>
+      <div class="nola-map-wrap">
+        <div class="pin-tooltip" id="pinTooltip"></div>
+        <svg class="basemap" viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg">
+
+          <rect width="900" height="560" fill="#1a2b18"/>
+
+          <!-- Mississippi River -->
+          <path d="M 0 420 Q 150 400 300 410 Q 450 420 550 400 Q 650 380 750 390 Q 850 400 900 380 L 900 560 L 0 560 Z" fill="#1a3a5c" opacity="0.8"/>
+          <path d="M 0 430 Q 150 415 300 425 Q 450 435 550 415 Q 650 395 750 405 Q 850 415 900 395" stroke="#2a5f9e" stroke-width="1.5" fill="none" opacity="0.5"/>
+
+          <!-- Lake Pontchartrain -->
+          <path d="M 60 0 Q 300 22 600 10 Q 750 4 900 34 L 900 0 Z" fill="#1a3a5c" opacity="0.55"/>
+
+          <!-- Neighborhood fills -->
+          <polygon points="480,252 560,242 580,316 500,326" fill="rgba(160,32,15,0.1)" stroke="rgba(160,32,15,0.26)" stroke-width="1"/>
+          <polygon points="250,306 340,296 352,366 262,376" fill="rgba(59,83,35,0.1)" stroke="rgba(59,83,35,0.26)" stroke-width="1"/>
+          <polygon points="560,242 620,230 640,302 580,316" fill="rgba(43,74,122,0.1)" stroke="rgba(43,74,122,0.26)" stroke-width="1"/>
+          <polygon points="400,274 480,254 502,326 422,344" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.18)" stroke-width="1"/>
+          <polygon points="158,326 258,314 270,394 168,404" fill="rgba(59,83,35,0.08)" stroke="rgba(59,83,35,0.18)" stroke-width="1"/>
+          <polygon points="298,164 452,152 462,234 308,244" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.14)" stroke-width="1"/>
+          <polygon points="622,230 702,210 722,280 640,302" fill="rgba(43,74,122,0.09)" stroke="rgba(43,74,122,0.2)" stroke-width="1"/>
+          <polygon points="454,196 540,186 555,250 470,260" fill="rgba(180,100,20,0.08)" stroke="rgba(180,100,20,0.2)" stroke-width="1"/>
+
+          <!-- Street grid -->
+          <g stroke="rgba(245,239,224,0.03)" stroke-width="1">
+            <line x1="0" y1="270" x2="900" y2="270"/>
+            <line x1="0" y1="310" x2="900" y2="310"/>
+            <line x1="0" y1="350" x2="900" y2="350"/>
+            <line x1="0" y1="230" x2="900" y2="230"/>
+            <line x1="150" y1="100" x2="150" y2="420"/>
+            <line x1="300" y1="100" x2="300" y2="420"/>
+            <line x1="450" y1="100" x2="450" y2="420"/>
+            <line x1="600" y1="100" x2="600" y2="420"/>
+            <line x1="750" y1="100" x2="750" y2="420"/>
+          </g>
+
+          <!-- Canal Street -->
+          <line x1="450" y1="250" x2="450" y2="420" stroke="rgba(201,168,76,0.16)" stroke-width="3"/>
+          <text x="432" y="382" fill="rgba(201,168,76,0.3)" font-family="Oswald,sans-serif" font-size="8" letter-spacing="1" text-anchor="middle" transform="rotate(-90,432,382)">CANAL ST</text>
+
+          <!-- Neighborhood labels -->
+          <text x="523" y="290" class="neighborhood-label" text-anchor="middle">French Quarter</text>
+          <text x="300" y="340" class="neighborhood-label" text-anchor="middle">Garden District</text>
+          <text x="608" y="270" class="neighborhood-label" text-anchor="middle">Marigny</text>
+          <text x="455" y="312" class="neighborhood-label" text-anchor="middle">CBD</text>
+          <text x="210" y="362" class="neighborhood-label" text-anchor="middle">Uptown</text>
+          <text x="376" y="200" class="neighborhood-label" text-anchor="middle">Mid-City</text>
+          <text x="672" y="250" class="neighborhood-label" text-anchor="middle">Bywater</text>
+          <text x="504" y="224" class="neighborhood-label" text-anchor="middle">Tremé</text>
+
+          <!-- Water labels -->
+          <text x="440" y="490" class="river-text" text-anchor="middle">Mississippi River</text>
+          <text x="440" y="28" class="river-text" text-anchor="middle" font-size="11">Lake Pontchartrain</text>
+
+          <!-- ════ PINS ════ -->
+
+          <!-- French Quarter -->
+          <g class="pin food" id="pin-cafe-du-monde" data-id="cafe-du-monde" data-name="Café Du Monde" onclick="openModal('cafe-du-monde')">
+            <circle cx="512" cy="262" r="15" class="outer"/>
+            <circle cx="512" cy="262" r="5" class="inner"/>
+            <text x="512" y="248" text-anchor="middle" font-size="11">☕</text>
+          </g>
+
+          <g class="pin bar" id="pin-pat-obrien" data-id="pat-obrien" data-name="Pat O'Brien's" onclick="openModal('pat-obrien')">
+            <circle cx="542" cy="273" r="15" class="outer"/>
+            <circle cx="542" cy="273" r="5" class="inner"/>
+            <text x="542" y="259" text-anchor="middle" font-size="11">🍹</text>
+          </g>
+
+          <g class="pin culture" id="pin-preservation-hall" data-id="preservation-hall" data-name="Preservation Hall" onclick="openModal('preservation-hall')">
+            <circle cx="528" cy="298" r="15" class="outer"/>
+            <circle cx="528" cy="298" r="5" class="inner"/>
+            <text x="528" y="284" text-anchor="middle" font-size="11">🎷</text>
+          </g>
+
+          <g class="pin food" id="pin-commanders-palace" data-id="commanders-palace" data-name="Commander's Palace" onclick="openModal('commanders-palace')">
+            <circle cx="492" cy="296" r="15" class="outer"/>
+            <circle cx="492" cy="296" r="5" class="inner"/>
+            <text x="492" y="282" text-anchor="middle" font-size="11">🍽</text>
+          </g>
+
+          <!-- Garden District -->
+          <g class="pin food" id="pin-stein-deli" data-id="stein-deli" data-name="Stein's Market & Deli" onclick="openModal('stein-deli')">
+            <circle cx="292" cy="323" r="15" class="outer"/>
+            <circle cx="292" cy="323" r="5" class="inner"/>
+            <text x="292" y="309" text-anchor="middle" font-size="11">🥪</text>
+          </g>
+
+          <g class="pin food" id="pin-lilettes" data-id="lilettes" data-name="Lilette" onclick="openModal('lilettes')">
+            <circle cx="268" cy="350" r="15" class="outer"/>
+            <circle cx="268" cy="350" r="5" class="inner"/>
+            <text x="268" y="336" text-anchor="middle" font-size="11">🌹</text>
+          </g>
+
+          <!-- Marigny -->
+          <g class="pin food" id="pin-pizza-delicious" data-id="pizza-delicious" data-name="Pizza Delicious" onclick="openModal('pizza-delicious')">
+            <circle cx="622" cy="258" r="15" class="outer"/>
+            <circle cx="622" cy="258" r="5" class="inner"/>
+            <text x="622" y="244" text-anchor="middle" font-size="11">🍕</text>
+          </g>
+
+          <g class="pin bar" id="pin-marigny-brasserie" data-id="marigny-brasserie" data-name="Marigny Brasserie" onclick="openModal('marigny-brasserie')">
+            <circle cx="598" cy="278" r="15" class="outer"/>
+            <circle cx="598" cy="278" r="5" class="inner"/>
+            <text x="598" y="264" text-anchor="middle" font-size="11">🥂</text>
+          </g>
+
+          <!-- Bywater -->
+          <g class="pin bar" id="pin-bacchanal" data-id="bacchanal" data-name="Bacchanal Wine" onclick="openModal('bacchanal')">
+            <circle cx="664" cy="244" r="15" class="outer"/>
+            <circle cx="664" cy="244" r="5" class="inner"/>
+            <text x="664" y="230" text-anchor="middle" font-size="11">🍷</text>
+          </g>
+
+          <!-- CBD -->
+          <g class="pin bar" id="pin-sazerac" data-id="sazerac" data-name="Sazerac Bar" onclick="openModal('sazerac')">
+            <circle cx="432" cy="292" r="15" class="outer"/>
+            <circle cx="432" cy="292" r="5" class="inner"/>
+            <text x="432" y="278" text-anchor="middle" font-size="11">🥃</text>
+          </g>
+
+          <!-- Uptown -->
+          <g class="pin food" id="pin-casamentos" data-id="casamentos" data-name="Casamento's" onclick="openModal('casamentos')">
+            <circle cx="202" cy="350" r="15" class="outer"/>
+            <circle cx="202" cy="350" r="5" class="inner"/>
+            <text x="202" y="336" text-anchor="middle" font-size="11">🦪</text>
+          </g>
+
+          <g class="pin bar" id="pin-cure" data-id="cure" data-name="Cure" onclick="openModal('cure')">
+            <circle cx="180" cy="374" r="15" class="outer"/>
+            <circle cx="180" cy="374" r="5" class="inner"/>
+            <text x="180" y="360" text-anchor="middle" font-size="11">🍸</text>
+          </g>
+
+          <!-- Mid-City -->
+          <g class="pin food" id="pin-dooky-chase" data-id="dooky-chase" data-name="Dooky Chase's" onclick="openModal('dooky-chase')">
+            <circle cx="372" cy="184" r="15" class="outer"/>
+            <circle cx="372" cy="184" r="5" class="inner"/>
+            <text x="372" y="170" text-anchor="middle" font-size="11">🍛</text>
+          </g>
+
+          <!-- Tremé -->
+          <g class="pin culture" id="pin-vaughans" data-id="vaughans" data-name="Vaughan's Lounge" onclick="openModal('vaughans')">
+            <circle cx="506" cy="216" r="15" class="outer"/>
+            <circle cx="506" cy="216" r="5" class="inner"/>
+            <text x="506" y="202" text-anchor="middle" font-size="11">🎺</text>
+          </g>
+
+          <g class="pin bar" id="pin-cane-table" data-id="cane-table" data-name="Cane & Table" onclick="openModal('cane-table')">
+            <circle cx="482" cy="238" r="15" class="outer"/>
+            <circle cx="482" cy="238" r="5" class="inner"/>
+            <text x="482" y="224" text-anchor="middle" font-size="11">🌿</text>
+          </g>
+
+        </svg>
+      </div>
+
+      <div class="map-legend">
+        <div class="legend-item"><div class="legend-dot food"></div> Food</div>
+        <div class="legend-item"><div class="legend-dot bar"></div> Bars & Cocktails</div>
+        <div class="legend-item"><div class="legend-dot culture"></div> Culture & Music</div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="location-sidebar">
+      <div class="sidebar-header">
+        <span>Locations</span>
+        <span class="sidebar-count" id="sidebar-count"></span>
+      </div>
+      <div class="no-results" id="no-results">No spots match your filters ⚜</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════ DAY TRIPS PAGE ════════════ -->
+<div id="page-daytrips" class="page">
+  <div id="daytrip-list">
+    <div class="map-intro">
+      <h2>Beyond the Crescent City</h2>
+      <p>Day trips Scot has explored — every stop mapped out and linked to his videos.</p>
+    </div>
+    <div class="itinerary-grid">
+      <div class="trip-card" onclick="showItinerary('cajun-country')">
+        <div class="trip-card-bg">🐊</div>
+        <div class="trip-card-content">
+          <h3>Cajun Country</h3>
+          <p>1.5 hrs west · Lafayette & Breaux Bridge</p>
+          <span class="explore-btn">Explore →</span>
+        </div>
+      </div>
+      <div class="trip-card" onclick="showItinerary('plantation-country')">
+        <div class="trip-card-bg">🌿</div>
+        <div class="trip-card-content">
+          <h3>Plantation Country</h3>
+          <p>45 min west · River Road</p>
+          <span class="explore-btn">Explore →</span>
+        </div>
+      </div>
+      <div class="trip-card" onclick="showItinerary('gulf-coast')">
+        <div class="trip-card-bg">🦐</div>
+        <div class="trip-card-content">
+          <h3>Gulf Coast Seafood Run</h3>
+          <p>1 hr east · Bay St. Louis & Biloxi</p>
+          <span class="explore-btn">Explore →</span>
+        </div>
+      </div>
+      <div class="trip-card" onclick="showItinerary('northshore')">
+        <div class="trip-card-bg">🍺</div>
+        <div class="trip-card-content">
+          <h3>Northshore Brewery Trail</h3>
+          <p>45 min north · Abita Springs & Covington</p>
+          <span class="explore-btn">Explore →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="daytrip-detail" style="display:none">
+    <div class="itinerary-detail">
+      <button class="back-btn" onclick="backToTrips()">← All Day Trips</button>
+      <div class="itinerary-detail-header">
+        <h2 id="detail-title"></h2>
+        <p id="detail-desc"></p>
+      </div>
+      <div class="itinerary-stops">
+        <div id="stops-list"></div>
+        <div class="route-map">
+          <svg id="route-svg" viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ ABOUT PAGE ════════════ -->
+<div id="page-about" class="page">
+  <div class="about-page">
+    <div class="big-fleur">⚜</div>
+    <h2>Who is Scot Pilie?</h2>
+    <div class="divider"></div>
+    <p>Born and raised with hot sauce in his veins, Scot Pilie has been eating his way through New Orleans one video at a time. From hole-in-the-wall po'boy joints to James Beard-nominated dining rooms — if it's worth your time, Scot's already been there.</p>
+    <p>What started as a love letter to his city has grown into a trusted guide for locals and visitors alike, and now an expanding tour of the South's most delicious destinations.</p>
+    <div class="stats">
+      <div class="stat-box"><div class="num">200+</div><div class="label">Spots Reviewed</div></div>
+      <div class="stat-box"><div class="num">50k+</div><div class="label">Followers</div></div>
+      <div class="stat-box"><div class="num">10+</div><div class="label">Cities Explored</div></div>
+    </div>
+    <div class="contact-area">
+      <h3>Work with Scot</h3>
+      <p style="opacity:0.62;font-size:0.87rem;line-height:1.75">Tourism boards, restaurants, and brands — let's make something your audience will actually watch. Scot partners with businesses that fit his authentic New Orleans perspective.</p>
+      <a href="mailto:hello@scotpilie.com">Get in Touch ⚜</a>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ MODAL ════════════ -->
+<div class="modal-overlay" id="videoModal" onclick="closeModalOutside(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <h3 id="modal-name"></h3>
+        <div class="meta" id="modal-meta"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-cats" id="modal-cats"></div>
+    <div class="modal-video-area" id="modal-video-area"></div>
+    <div class="modal-footer"><p id="modal-description"></p></div>
+  </div>
+</div>
+
+<footer>⚜ Scot Pilie · New Orleans, Louisiana ⚜</footer>
+
+<script>
+// ════════════════════════════════════════
+// LOCATION DATA
+// ════════════════════════════════════════
+const LOCATIONS = {
+  'cafe-du-monde':      { name:"Café Du Monde",          hood:"French Quarter", type:"food",    emoji:"☕", cats:["Brunch","Outdoor Seating","Late Night"],                           desc:"The iconic open-air café on the riverfront. Beignets so good they'll ruin every donut for the rest of your life. Open 24/7.",          platform:"instagram", url:"https://www.instagram.com/scotpilie" },
+  'pat-obrien':         { name:"Pat O'Brien's",           hood:"French Quarter", type:"bar",     emoji:"🍹", cats:["Happy Hour","Late Night","Outdoor Seating","Live Music"],           desc:"Home of the Hurricane. The flaming fountain courtyard and dueling piano bar are as New Orleans as it gets.",                           platform:"tiktok",    url:"https://www.tiktok.com/@scotpilie" },
+  'preservation-hall':  { name:"Preservation Hall",       hood:"French Quarter", type:"culture", emoji:"🎷", cats:["Live Music","Date Night"],                                          desc:"The heartbeat of New Orleans jazz. A tiny, sacred room that holds the entire soul of this city.",                                      platform:"instagram", url:"https://www.instagram.com/scotpilie" },
+  'commanders-palace':  { name:"Commander's Palace",      hood:"French Quarter", type:"food",    emoji:"🍽", cats:["Date Night","Brunch","Minority Owned"],                             desc:"The standard-bearer of New Orleans haute cuisine. Sunday jazz brunch is a rite of passage every visitor owes themselves.",              platform:"tiktok",    url:"https://www.tiktok.com/@scotpilie" },
+  'stein-deli':         { name:"Stein's Market & Deli",   hood:"Garden District",type:"food",    emoji:"🥪", cats:["Brunch","LGBT+ Owned"],                                             desc:"New York deli soul transplanted to the Garden District. Their muffaletta is a revelation — and so are the owners.",                   platform:"instagram", url:"https://www.instagram.com/scotpilie" },
+  'lilettes':           { name:"Lilette",                 hood:"Garden District",type:"food",    emoji:"🌹", cats:["Date Night","Happy Hour"],                                          desc:"One of the most romantic rooms in New Orleans. French-Italian bistro with impeccable service and a killer happy hour.",                 platform:"tiktok",    url:"https://www.tiktok.com/@scotpilie" },
+  'pizza-delicious':    { name:"Pizza Delicious",         hood:"Marigny",        type:"food",    emoji:"🍕", cats:["Happy Hour","Outdoor Seating","LGBT+ Owned"],                       desc:"New York-style pizza in the Marigny. Deceptively simple, outrageously good, and aggressively welcoming.",                             platform:"instagram", url:"https://www.instagram.com/scotpilie" },
+  'marigny-brasserie':  { name:"Marigny Brasserie",       hood:"Marigny",        type:"bar",     emoji:"🥂", cats:["Date Night","Happy Hour","Outdoor Seating"],                        desc:"Charming neighborhood brasserie with a great wine list and even better people-watching from the patio.",                               platform:"tiktok",    url:"https://www.tiktok.com/@scotpilie" },
+  'bacchanal':          { name:"Bacchanal Wine",          hood:"Bywater",        type:"bar",     emoji:"🍷", cats:["Date Night","Happy Hour","Live Music","Outdoor Seating","LGBT+ Owned"], desc:"A wine shop with a live jazz backyard. Order a cheese plate, grab a bottle, and let the evening disappear.",                   platform:"instagram", url:"https://www.instagram.com/scotpilie" },
+  'sazerac':            { name:"Sazerac Bar",             hood:"CBD",            type:"bar",     emoji:"🥃", cats:["Date Night","Happy Hour"],                                          desc:"Art Deco perfection inside the Roosevelt Hotel. The birthplace of the Sazerac cocktail. Order one and don't rush it.",                 platform:"tiktok",    url:"https://www.tiktok.com/@scotpilie" },
+  'casamentos':         { name:"Casamento's",             hood:"Uptown",         type:"food",    emoji:"🦪", cats:["Minority Owned"],                                                   desc:"A century-old oyster house with tiled walls and zero pretense. Order the oyster loaf. Don't overthink it.",                            platform:"instagram", url:"https://www.instagram.com/scotpilie" },
+  'cure':               { name:"Cure",                    hood:"Uptown",         type:"bar",     emoji:"🍸", cats:["Date Night","Happy Hour","Late Night"],                              desc:"The cocktail bar that put New Orleans craft cocktails on the national map. Come for happy hour, stay until close.",                    platform:"tiktok",    url:"https://www.tiktok.com/@scotpilie" },
+  'dooky-chase':        { name:"Dooky Chase's Restaurant",hood:"Mid-City",       type:"food",    emoji:"🍛", cats:["Minority Owned","Brunch","Live Music"],                             desc:"Leah Chase was a legend. Her restaurant changed civil rights history. The red beans & rice will change you, too.",                    platform:"instagram", url:"https://www.instagram.com/scotpilie" },
+  'vaughans':           { name:"Vaughan's Lounge",        hood:"Tremé",          type:"culture", emoji:"🎺", cats:["Live Music","Late Night","LGBT+ Owned"],                            desc:"A legendary dive bar where Kermit Ruffins got his start. Thursday nights are something you'll be talking about for years.",            platform:"tiktok",    url:"https://www.tiktok.com/@scotpilie" },
+  'cane-table':         { name:"Cane & Table",            hood:"Tremé",          type:"bar",     emoji:"🌿", cats:["Date Night","Happy Hour","Outdoor Seating"],                        desc:"Proto-tiki cocktails and Caribbean-inspired small plates steps from the French Quarter. Hidden gem energy.",                           platform:"instagram", url:"https://www.instagram.com/scotpilie" }
+};
+
+const ITINERARIES = {
+  'cajun-country':      { title:"Cajun Country",          desc:"Head west through the bayou to Lafayette and Breaux Bridge — heartland of boudin, cracklins, and two-step dancing.", stops:[{name:"Don's Specialty Meats",time:"9:00 AM",note:"Boudin balls and cracklins for the road. This is your breakfast.",url:"https://www.tiktok.com/@scotpilie",x:60,y:50},{name:"Café Des Amis",time:"11:30 AM",note:"Zydeco brunch in Breaux Bridge. Live music while you eat crawfish étouffée.",url:"https://www.instagram.com/scotpilie",x:160,y:130},{name:"Johnson's Boucanière",time:"1:30 PM",note:"Smoked meats that will make you question every BBQ you've ever had.",url:"https://www.tiktok.com/@scotpilie",x:245,y:210},{name:"Blue Moon Saloon",time:"4:00 PM",note:"Cold beer, great music. The perfect end to a Cajun day.",url:"https://www.instagram.com/scotpilie",x:315,y:295}] },
+  'plantation-country': { title:"Plantation Country",     desc:"Drive River Road and experience Louisiana's complex history alongside stunning architecture and great food.", stops:[{name:"Oak Alley Plantation",time:"9:30 AM",note:"The famous live oak alley is worth the drive alone.",url:"https://www.instagram.com/scotpilie",x:65,y:55},{name:"Houmas House",time:"11:30 AM",note:"Beautiful grounds, Louisiana history, excellent gift shop.",url:"https://www.tiktok.com/@scotpilie",x:195,y:165},{name:"B&C Seafood Market",time:"1:30 PM",note:"Fresh Gulf seafood on the bayou. Get the boiled crawfish if in season.",url:"https://www.instagram.com/scotpilie",x:308,y:272}] },
+  'gulf-coast':         { title:"Gulf Coast Seafood Run", desc:"Head east to Bay St. Louis and Biloxi for fresh Gulf seafood, charming downtowns, and that salty air.", stops:[{name:"The Blind Tiger",time:"10:00 AM",note:"Coffee and breakfast in Bay St. Louis's adorable downtown.",url:"https://www.instagram.com/scotpilie",x:60,y:58},{name:"Trapani's Eatery",time:"12:00 PM",note:"Fresh oysters and Gulf shrimp from a local institution.",url:"https://www.tiktok.com/@scotpilie",x:185,y:158},{name:"Slavich Oyster House",time:"2:30 PM",note:"A beloved Biloxi legend. Raw bar heaven.",url:"https://www.instagram.com/scotpilie",x:285,y:250},{name:"Gulf Coast Sunset",time:"5:30 PM",note:"Find a beach, watch the sun go down, decide if you want to go back.",url:null,x:336,y:315}] },
+  'northshore':         { title:"Northshore Brewery Trail",desc:"Cross the Causeway and explore the piney Northshore — craft beer, small-town charm, and great eats.", stops:[{name:"Abita Brewing Company",time:"11:00 AM",note:"The OG Louisiana craft brewery. Tour is free, beer is cold.",url:"https://www.tiktok.com/@scotpilie",x:88,y:68},{name:"Pontchartrain Brewing",time:"1:00 PM",note:"Covington's local favorite. Pair with a po'boy from next door.",url:"https://www.instagram.com/scotpilie",x:218,y:175},{name:"Oxlot 9",time:"3:00 PM",note:"Upscale comfort food in a charming Covington courtyard.",url:"https://www.tiktok.com/@scotpilie",x:308,y:275}] }
+};
+
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+let activeHood = 'all';
+let activeCats = new Set();
+
+// ════════════════════════════════════════
+// BUILD SIDEBAR
+// ════════════════════════════════════════
+function buildSidebar() {
+  const sidebar = document.getElementById('location-sidebar');
+  Object.entries(LOCATIONS).forEach(([id, loc]) => {
+    const card = document.createElement('div');
+    card.className = 'loc-card';
+    card.dataset.id = id;
+    card.innerHTML = `
+      <div class="loc-emoji">${loc.emoji}</div>
+      <div class="loc-info">
+        <div class="loc-name">${loc.name}</div>
+        <div class="loc-neighborhood">${loc.hood}</div>
+        <div class="loc-tags">${loc.cats.map(c => `<span class="loc-tag ${c.replace(/[^a-zA-Z]/g,'-')}">${c}</span>`).join('')}</div>
+      </div>`;
+    card.addEventListener('click', () => openModal(id));
+    card.addEventListener('mouseenter', () => highlightPin(id, true));
+    card.addEventListener('mouseleave',  () => highlightPin(id, false));
+    sidebar.appendChild(card);
+  });
+}
+
+// ════════════════════════════════════════
+// FILTER
+// ════════════════════════════════════════
+function applyFilters() {
+  let visible = 0;
+  const total = Object.keys(LOCATIONS).length;
+
+  Object.entries(LOCATIONS).forEach(([id, loc]) => {
+    const hoodOk = activeHood === 'all' || loc.hood === activeHood;
+    const catOk  = activeCats.size === 0 || [...activeCats].every(c => loc.cats.includes(c));
+    const show   = hoodOk && catOk;
+
+    const card = document.querySelector(`.loc-card[data-id="${id}"]`);
+    if (card) card.classList.toggle('filtered-out', !show);
+
+    const pin = document.getElementById(`pin-${id}`);
+    if (pin) pin.classList.toggle('dimmed', !show);
+
+    if (show) visible++;
+  });
+
+  // Counts
+  const anyFilter = activeHood !== 'all' || activeCats.size > 0;
+  document.getElementById('results-count').textContent = anyFilter ? `${visible} of ${total}` : '';
+  document.getElementById('sidebar-count').textContent = `${visible}`;
+  document.getElementById('no-results').style.display = visible === 0 ? 'block' : 'none';
+  document.getElementById('clear-btn').classList.toggle('hidden', !anyFilter);
+}
+
+function toggleHood(chip) {
+  document.querySelectorAll('#hood-chips .chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  activeHood = chip.dataset.hood;
+  applyFilters();
+}
+
+function toggleCat(chip) {
+  const cat = chip.dataset.category;
+  if (chip.classList.contains('active')) { chip.classList.remove('active'); activeCats.delete(cat); }
+  else { chip.classList.add('active'); activeCats.add(cat); }
+  applyFilters();
+}
+
+function clearFilters() {
+  activeHood = 'all';
+  activeCats.clear();
+  document.querySelectorAll('#hood-chips .chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('[data-hood="all"]').classList.add('active');
+  document.querySelectorAll('#cat-chips .chip').forEach(c => c.classList.remove('active'));
+  applyFilters();
+}
+
+// ════════════════════════════════════════
+// PIN HIGHLIGHT (bidirectional)
+// ════════════════════════════════════════
+function highlightPin(id, on) {
+  const pin = document.getElementById(`pin-${id}`);
+  if (pin) pin.classList.toggle('highlighted', on);
+  const card = document.querySelector(`.loc-card[data-id="${id}"]`);
+  if (card) { card.classList.toggle('active-card', on); if (on) card.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+}
+
+// Add pin → sidebar hover too
+document.querySelectorAll('.pin').forEach(pin => {
+  const id = pin.dataset.id;
+  pin.addEventListener('mouseenter', () => { if (id) highlightPin(id, true); });
+  pin.addEventListener('mouseleave',  () => { if (id) highlightPin(id, false); });
+});
+
+// ════════════════════════════════════════
+// TOOLTIP
+// ════════════════════════════════════════
+const tooltip = document.getElementById('pinTooltip');
+document.querySelectorAll('.pin').forEach(pin => {
+  pin.addEventListener('mouseenter', () => { tooltip.textContent = pin.dataset.name || ''; tooltip.style.display = 'block'; });
+  pin.addEventListener('mousemove', e => {
+    const r = pin.closest('.nola-map-wrap').getBoundingClientRect();
+    tooltip.style.left = (e.clientX - r.left + 14) + 'px';
+    tooltip.style.top  = (e.clientY - r.top  - 10) + 'px';
+  });
+  pin.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+});
+
+// ════════════════════════════════════════
+// MODAL
+// ════════════════════════════════════════
+function openModal(id) {
+  const loc = LOCATIONS[id];
+  if (!loc) return;
+  document.getElementById('modal-name').textContent = loc.name;
+  document.getElementById('modal-meta').textContent = `${loc.hood} · New Orleans, LA`;
+  document.getElementById('modal-description').textContent = loc.desc;
+  document.getElementById('modal-cats').innerHTML = loc.cats.map(c =>
+    `<span class="loc-tag ${c.replace(/[^a-zA-Z]/g,'-')}">${c}</span>`).join('');
+
+  const plat = loc.platform === 'instagram' ? 'Instagram' : 'TikTok';
+  const icon = loc.platform === 'instagram' ? '📸' : '🎵';
+  document.getElementById('modal-video-area').innerHTML = `
+    <div class="big-emoji">${loc.emoji}</div>
+    <p>Watch Scot's ${plat} video</p>
+    <a class="modal-link-btn" href="${loc.url}" target="_blank">${icon} Watch on ${plat}</a>
+  `;
+  document.getElementById('videoModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('videoModal').classList.remove('open');
+  document.body.style.overflow = '';
+  document.querySelectorAll('.loc-card').forEach(c => c.classList.remove('active-card'));
+}
+
+function closeModalOutside(e) { if (e.target.id === 'videoModal') closeModal(); }
+
+// ════════════════════════════════════════
+// NAV
+// ════════════════════════════════════════
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ════════════════════════════════════════
+// ITINERARIES
+// ════════════════════════════════════════
+function showItinerary(id) {
+  const trip = ITINERARIES[id];
+  if (!trip) return;
+  document.getElementById('daytrip-list').style.display = 'none';
+  document.getElementById('daytrip-detail').style.display = 'block';
+  document.getElementById('detail-title').textContent = trip.title;
+  document.getElementById('detail-desc').textContent = trip.desc;
+  document.getElementById('stops-list').innerHTML = trip.stops.map((s,i) => `
+    <div class="stop-item">
+      <div class="stop-number">${i+1}</div>
+      <div class="stop-info">
+        <h4>${s.name}</h4>
+        <div class="stop-time">${s.time}</div>
+        <p>${s.note}</p>
+        ${s.url ? `<a class="watch-link" href="${s.url}" target="_blank">▶ Watch Scot's Video</a>` : ''}
+      </div>
+    </div>`).join('');
+
+  const pts = trip.stops;
+  const pathD = pts.map((p,i) => `${i===0?'M':'L'} ${p.x+20} ${p.y+20}`).join(' ');
+  document.getElementById('route-svg').innerHTML = `
+    <rect width="400" height="360" fill="#1a2b18"/>
+    <path d="${pathD}" stroke="rgba(201,168,76,0.45)" stroke-width="2" fill="none" stroke-dasharray="6,4"/>
+    ${pts.map((p,i)=>`
+      <circle cx="${p.x+20}" cy="${p.y+20}" r="15" fill="#2B1A3A" stroke="#C9A84C" stroke-width="2"/>
+      <text x="${p.x+20}" y="${p.y+25}" text-anchor="middle" fill="#C9A84C" font-family="Oswald,sans-serif" font-size="11" font-weight="600">${i+1}</text>
+      <text x="${p.x+40}" y="${p.y+17}" fill="rgba(245,239,224,0.6)" font-family="Oswald,sans-serif" font-size="8.5" letter-spacing="0.5">${p.name.length>19?p.name.substring(0,18)+'…':p.name}</text>
+    `).join('')}
+    <text x="200" y="352" text-anchor="middle" fill="rgba(201,168,76,0.2)" font-family="Oswald,sans-serif" font-size="7.5" letter-spacing="3">ROUTE OVERVIEW</text>`;
+}
+
+function backToTrips() {
+  document.getElementById('daytrip-list').style.display = 'block';
+  document.getElementById('daytrip-detail').style.display = 'none';
+}
+
+// ════════════════════════════════════════
+// KEYBOARD
+// ════════════════════════════════════════
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+buildSidebar();
+applyFilters();
+</script>
+</body>
+</html>
