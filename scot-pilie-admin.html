@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scot Pilie — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Oswald:wght@300;400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --gold: #C9A84C;
+    --deep-purple: #2B1A3A;
+    --cream: #F5EFE0;
+    --iron: #1A1A2E;
+    --green: #2d6a4f;
+    --green-light: #52b788;
+    --red: #A0200F;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { background: var(--iron); color: var(--cream); font-family: 'Oswald', sans-serif; min-height: 100vh; }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Ctext x='30' y='42' text-anchor='middle' font-size='28' fill='%23C9A84C' opacity='0.03'%3E⚜%3C/text%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    background: rgba(43,26,58,0.97);
+    border-bottom: 2px solid var(--gold);
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-style: italic; color: var(--gold); }
+  .logo span { color: var(--cream); font-style: normal; }
+  .logo-sub { font-size: 0.55rem; letter-spacing: 3px; text-transform: uppercase; opacity: 0.36; margin-top: 2px; }
+  .hdivider { width: 1px; height: 34px; background: rgba(201,168,76,0.25); }
+  .badge { font-size: 0.55rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,168,76,0.35); padding: 5px 11px; }
+
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+
+  .db-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(245,239,224,0.4);
+  }
+
+  .db-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(245,239,224,0.2); transition: background 0.3s; }
+  .db-dot.connected { background: var(--green-light); box-shadow: 0 0 6px rgba(82,183,136,0.6); }
+  .db-dot.error { background: var(--red); }
+
+  .total-count {
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(201,168,76,0.55);
+  }
+
+  .total-count span { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.1rem; font-style: italic; }
+
+  /* TABS */
+  .tabs {
+    background: rgba(26,26,46,0.95);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    display: flex;
+    position: sticky;
+    top: 64px;
+    z-index: 150;
+  }
+
+  .tab-btn {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    color: rgba(245,239,224,0.4);
+    padding: 13px 24px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+
+  .tab-btn:hover { color: var(--gold); }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* PAGES */
+  .tab-page { display: none; }
+  .tab-page.active { display: block; }
+
+  /* MAIN LAYOUT */
+  .main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 28px 24px 100px;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  @media (max-width: 880px) { .main { grid-template-columns: 1fr; } }
+
+  /* FORM CARD */
+  .card {
+    background: rgba(43,26,58,0.4);
+    border: 1px solid rgba(201,168,76,0.14);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    background: rgba(43,26,58,0.7);
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-header h2 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-style: italic; color: var(--gold); }
+  .card-header p { font-size: 0.56rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.36; margin-top: 2px; }
+
+  .card-body {
+    padding: 16px 18px;
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201,168,76,0.18) transparent;
+  }
+
+  /* FIELDS */
+  .field { margin-bottom: 10px; }
+  .field label { display: block; font-size: 0.56rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(245,239,224,0.4); margin-bottom: 4px; }
+
+  .field input, .field select, .field textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.16);
+    color: var(--cream);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+    border-radius: 2px;
+  }
+
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold); background: rgba(201,168,76,0.04); }
+  .field input::placeholder, .field textarea::placeholder { opacity: 0.22; }
+  .field select option { background: var(--deep-purple); }
+  .field textarea { resize: vertical; min-height: 65px; line-height: 1.5; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* ADDRESS */
+  .address-wrap { position: relative; }
+  .suggestions-box {
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--deep-purple);
+    border: 1px solid rgba(201,168,76,0.28); border-top: none;
+    z-index: 300; max-height: 190px; overflow-y: auto; display: none;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.55);
+  }
+
+  .sugg-item { padding: 9px 12px; font-size: 0.75rem; cursor: pointer; border-bottom: 1px solid rgba(201,168,76,0.06); transition: background 0.12s; line-height: 1.4; }
+  .sugg-item:hover { background: rgba(201,168,76,0.1); }
+  .sugg-item .sn { color: var(--cream); }
+  .sugg-item .sa { font-size: 0.6rem; opacity: 0.38; margin-top: 2px; }
+
+  .coord-row { display: flex; gap: 6px; margin-top: 6px; }
+  .coord-block { flex: 1; }
+  .coord-label { font-size: 0.5rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.36; margin-bottom: 3px; }
+  .coord-pill { background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.13); border-radius: 2px; padding: 6px 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.67rem; color: rgba(201,168,76,0.45); text-align: center; transition: all 0.3s; }
+  .coord-pill.set { background: rgba(201,168,76,0.11); border-color: var(--gold); color: var(--gold); }
+
+  #admin-map { width: 100%; height: 155px; border: 1px solid rgba(201,168,76,0.14); border-radius: 2px; margin-top: 8px; display: none; }
+
+  .section-sep { font-size: 0.52rem; letter-spacing: 3px; text-transform: uppercase; color: rgba(201,168,76,0.45); margin: 13px 0 8px; display: flex; align-items: center; gap: 8px; }
+  .section-sep::after { content: ''; flex: 1; height: 1px; background: rgba(201,168,76,0.09); }
+
+  /* EMOJI */
+  .emoji-grid { display: flex; flex-wrap: wrap; gap: 4px; }
+  .emoji-btn { width: 32px; height: 32px; font-size: 0.92rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(201,168,76,0.12); border-radius: 2px; cursor: pointer; transition: all 0.12s; display: flex; align-items: center; justify-content: center; }
+  .emoji-btn:hover { border-color: var(--gold); background: rgba(201,168,76,0.07); }
+  .emoji-btn.sel { border-color: var(--gold); background: rgba(201,168,76,0.16); box-shadow: 0 0 0 1px var(--gold); }
+
+  /* CATS */
+  .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+  .cat-check { display: flex; align-items: center; gap: 7px; padding: 6px 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(201,168,76,0.1); border-radius: 2px; cursor: pointer; transition: all 0.12s; user-select: none; }
+  .cat-check:hover { border-color: rgba(201,168,76,0.3); }
+  .cat-check.on { border-color: var(--gold); background: rgba(201,168,76,0.06); }
+  .cat-check input { display: none; }
+  .cat-box { width: 12px; height: 12px; border: 1.5px solid rgba(201,168,76,0.32); border-radius: 2px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.12s; }
+  .cat-check.on .cat-box { background: var(--gold); border-color: var(--gold); }
+  .cat-check.on .cat-box::after { content: '✓'; font-size: 7px; color: var(--iron); font-weight: bold; }
+  .cat-label { font-size: 0.62rem; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  /* SAVE BUTTON */
+  .save-btn {
+    width: 100%; margin-top: 16px; padding: 14px;
+    background: var(--gold); color: var(--iron);
+    border: none; font-family: 'Oswald', sans-serif;
+    font-size: 0.78rem; letter-spacing: 4px; text-transform: uppercase;
+    font-weight: 600; cursor: pointer; transition: all 0.2s; border-radius: 2px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+
+  .save-btn:hover { background: #d4b05a; transform: translateY(-1px); }
+  .save-btn:active { transform: none; }
+  .save-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  .spinner { width: 16px; height: 16px; border: 2px solid rgba(26,26,46,0.4); border-top-color: var(--iron); border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* SEARCHING */
+  .search-hint { font-size: 0.52rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); opacity: 0.5; margin-top: 3px; display: none; }
+
+  /* RIGHT PANEL */
+  .right-panel { display: flex; flex-direction: column; gap: 20px; }
+
+  /* LOCATIONS LIST */
+  .loc-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .loc-list-header h3 { font-family: 'Playfair Display', serif; font-size: 1rem; font-style: italic; color: var(--gold); }
+
+  .search-filter {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.16);
+    color: var(--cream);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.75rem;
+    padding: 7px 12px;
+    outline: none;
+    border-radius: 2px;
+    width: 200px;
+    transition: border-color 0.2s;
+  }
+
+  .search-filter:focus { border-color: var(--gold); }
+  .search-filter::placeholder { opacity: 0.3; }
+
+  .locations-loading { text-align: center; padding: 30px; font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.3; }
+
+  .locations-loading .sp { width: 20px; height: 20px; border: 2px solid rgba(201,168,76,0.2); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+
+  .loc-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-bottom: 1px solid rgba(201,168,76,0.07);
+    transition: background 0.12s;
+  }
+
+  .loc-row:hover { background: rgba(201,168,76,0.05); }
+  .loc-row .lr-emoji { font-size: 1.4rem; flex-shrink: 0; }
+  .loc-row .lr-info { flex: 1; min-width: 0; }
+  .loc-row .lr-name { font-family: 'Playfair Display', serif; font-size: 0.9rem; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .loc-row .lr-meta { font-family: 'Oswald', sans-serif; font-size: 0.57rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); opacity: 0.6; margin-top: 2px; }
+
+  .loc-row .lr-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+  .lr-tag { font-family: 'Oswald', sans-serif; font-size: 0.5rem; letter-spacing: 0.5px; text-transform: uppercase; padding: 1px 5px; border-radius: 2px; border: 1px solid rgba(201,168,76,0.25); color: rgba(201,168,76,0.7); background: rgba(201,168,76,0.05); white-space: nowrap; }
+
+  .loc-row .lr-coords { font-family: 'JetBrains Mono', monospace; font-size: 0.57rem; color: rgba(201,168,76,0.35); margin-top: 3px; }
+
+  .delete-btn {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: none;
+    border: 1px solid rgba(160,32,15,0.28);
+    color: rgba(160,32,15,0.55);
+    font-size: 0.85rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.18s;
+  }
+
+  .delete-btn:hover { background: var(--red); border-color: var(--red); color: #fff; }
+
+  .empty-list { text-align: center; padding: 50px 20px; font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.22; line-height: 1.8; }
+  .empty-list .ei { font-size: 2.2rem; margin-bottom: 12px; opacity: 0.3; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 2px; font-family: 'Oswald', sans-serif; font-size: 0.67rem; letter-spacing: 2px; text-transform: uppercase; z-index: 500; transform: translateY(70px); opacity: 0; transition: all 0.3s; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { background: var(--green); border: 1px solid var(--green-light); color: #fff; }
+  .toast.error { background: var(--red); border: 1px solid rgba(255,100,80,0.5); color: #fff; }
+
+  /* SQL SETUP TAB */
+  .setup-page { max-width: 740px; margin: 40px auto; padding: 0 20px 80px; }
+  .setup-page h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-style: italic; color: var(--gold); margin-bottom: 8px; }
+  .setup-page .intro { opacity: 0.6; font-size: 0.85rem; line-height: 1.7; margin-bottom: 28px; }
+
+  .setup-step { margin-bottom: 28px; }
+  .step-num-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .step-circle { width: 30px; height: 30px; border-radius: 50%; background: var(--gold); color: var(--iron); font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-title { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; }
+  .step-body { font-size: 0.78rem; line-height: 1.7; opacity: 0.6; margin-left: 42px; margin-bottom: 10px; }
+  .step-body strong { color: var(--gold); opacity: 1; }
+
+  .sql-block { background: rgba(0,0,0,0.5); border: 1px solid rgba(201,168,76,0.14); border-radius: 2px; position: relative; margin-left: 42px; }
+  .sql-block pre { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; line-height: 1.7; color: rgba(245,239,224,0.75); padding: 14px; overflow-x: auto; white-space: pre; }
+  .sql-copy { position: absolute; top: 7px; right: 7px; background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.26); color: var(--gold); font-family: 'Oswald', sans-serif; font-size: 0.56rem; letter-spacing: 2px; text-transform: uppercase; padding: 4px 10px; cursor: pointer; border-radius: 2px; transition: all 0.18s; }
+  .sql-copy:hover { background: var(--gold); color: var(--iron); }
+  .sql-copy.done { background: var(--green); border-color: var(--green-light); color: #fff; }
+
+  .done-check { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; margin-left: 42px; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(82,183,136,0.7); }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">Scot <span>Pilie</span></div>
+    <div class="logo-sub">New Orleans Guide</div>
+  </div>
+  <div class="hdivider"></div>
+  <div class="badge">⚙ Admin Panel</div>
+  <div class="header-right">
+    <div class="db-status">
+      <div class="db-dot" id="db-dot"></div>
+      <span id="db-status-text">Connecting...</span>
+    </div>
+    <div class="total-count">Locations: <span id="total-count">—</span></div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('add', this)">+ Add Location</button>
+  <button class="tab-btn" onclick="switchTab('manage', this)">Manage Locations</button>
+  <button class="tab-btn" onclick="switchTab('setup', this)">⚙ DB Setup</button>
+</div>
+
+<!-- ══ ADD TAB ══ -->
+<div id="tab-add" class="tab-page active">
+  <div class="main">
+
+    <!-- FORM -->
+    <div class="card" style="position:sticky;top:110px;">
+      <div class="card-header">
+        <div>
+          <h2>New Location</h2>
+          <p>Saves directly to the live site</p>
+        </div>
+      </div>
+      <div class="card-body">
+
+        <div class="section-sep">Find the Place</div>
+
+        <div class="field">
+          <label>Search Name or Address *</label>
+          <div class="address-wrap">
+            <input type="text" id="f-address" placeholder="e.g. Café Du Monde, New Orleans" autocomplete="off" oninput="onAddrInput()" onkeydown="if(event.key==='Escape')hideSugg()">
+            <div class="suggestions-box" id="sugg-box"></div>
+          </div>
+          <div class="search-hint" id="search-hint">Searching...</div>
+        </div>
+
+        <div class="coord-row">
+          <div class="coord-block"><div class="coord-label">Latitude</div><div class="coord-pill" id="lat-pill">—</div></div>
+          <div class="coord-block"><div class="coord-label">Longitude</div><div class="coord-pill" id="lng-pill">—</div></div>
+        </div>
+        <div id="admin-map"></div>
+
+        <div class="section-sep">Details</div>
+
+        <div class="field">
+          <label>Name *</label>
+          <input type="text" id="f-name" placeholder="Confirm or edit the name">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Neighborhood *</label>
+            <select id="f-hood">
+              <option value="">— Select —</option>
+              <option>French Quarter</option>
+              <option>Garden District</option>
+              <option>Marigny</option>
+              <option>Bywater</option>
+              <option>CBD</option>
+              <option>Uptown</option>
+              <option>Mid-City</option>
+              <option>Tremé</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Type *</label>
+            <select id="f-type">
+              <option value="">— Select —</option>
+              <option value="food">Food / Restaurant</option>
+              <option value="bar">Bar / Cocktails</option>
+              <option value="culture">Culture / Music</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Description</label>
+          <textarea id="f-desc" placeholder="What makes this place special..."></textarea>
+        </div>
+
+        <div class="section-sep">Emoji</div>
+        <div class="emoji-grid" id="emoji-grid">
+          <button class="emoji-btn sel" data-e="🍽" onclick="pickEmoji(this)">🍽</button>
+          <button class="emoji-btn" data-e="🦪" onclick="pickEmoji(this)">🦪</button>
+          <button class="emoji-btn" data-e="🍕" onclick="pickEmoji(this)">🍕</button>
+          <button class="emoji-btn" data-e="🌮" onclick="pickEmoji(this)">🌮</button>
+          <button class="emoji-btn" data-e="🍔" onclick="pickEmoji(this)">🍔</button>
+          <button class="emoji-btn" data-e="🥩" onclick="pickEmoji(this)">🥩</button>
+          <button class="emoji-btn" data-e="🍛" onclick="pickEmoji(this)">🍛</button>
+          <button class="emoji-btn" data-e="🥪" onclick="pickEmoji(this)">🥪</button>
+          <button class="emoji-btn" data-e="☕" onclick="pickEmoji(this)">☕</button>
+          <button class="emoji-btn" data-e="🥐" onclick="pickEmoji(this)">🥐</button>
+          <button class="emoji-btn" data-e="🍩" onclick="pickEmoji(this)">🍩</button>
+          <button class="emoji-btn" data-e="🌹" onclick="pickEmoji(this)">🌹</button>
+          <button class="emoji-btn" data-e="👑" onclick="pickEmoji(this)">👑</button>
+          <button class="emoji-btn" data-e="🍹" onclick="pickEmoji(this)">🍹</button>
+          <button class="emoji-btn" data-e="🥃" onclick="pickEmoji(this)">🥃</button>
+          <button class="emoji-btn" data-e="🍷" onclick="pickEmoji(this)">🍷</button>
+          <button class="emoji-btn" data-e="🍸" onclick="pickEmoji(this)">🍸</button>
+          <button class="emoji-btn" data-e="🍺" onclick="pickEmoji(this)">🍺</button>
+          <button class="emoji-btn" data-e="🥂" onclick="pickEmoji(this)">🥂</button>
+          <button class="emoji-btn" data-e="🌿" onclick="pickEmoji(this)">🌿</button>
+          <button class="emoji-btn" data-e="🎷" onclick="pickEmoji(this)">🎷</button>
+          <button class="emoji-btn" data-e="🎺" onclick="pickEmoji(this)">🎺</button>
+          <button class="emoji-btn" data-e="🎸" onclick="pickEmoji(this)">🎸</button>
+          <button class="emoji-btn" data-e="🎭" onclick="pickEmoji(this)">🎭</button>
+          <button class="emoji-btn" data-e="🎨" onclick="pickEmoji(this)">🎨</button>
+        </div>
+
+        <div class="section-sep">Categories</div>
+        <div class="cat-grid">
+          <label class="cat-check" onclick="toggleCat(this)"><input type="checkbox" value="Happy Hour"><div class="cat-box"></div><span class="cat-label">🍺 Happy Hour</span></label>
+          <label class="cat-check" onclick="toggleCat(this)"><input type="checkbox" value="Date Night"><div class="cat-box"></div><span class="cat-label">🕯 Date Night</span></label>
+          <label class="cat-check" onclick="toggleCat(this)"><input type="checkbox" value="Brunch"><div class="cat-box"></div><span class="cat-label">🥂 Brunch</span></label>
+          <label class="cat-check" onclick="toggleCat(this)"><input type="checkbox" value="Late Night"><div class="cat-box"></div><span class="cat-label">🌙 Late Night</span></label>
+          <label class="cat-check" onclick="toggleCat(this)"><input type="checkbox" value="Live Music"><div class="cat-box"></div><span class="cat-label">🎷 Live Music</span></label>
+          <label class="cat-check" onclick="toggleCat(this)"><input type="checkbox" value="Outdoor Seating"><div class="cat-box"></div><span class="cat-label">🌿 Outdoor</span></label>
+          <label class="cat-check" onclick="toggleCat(this)"><input type="checkbox" value="LGBT+ Owned"><div class="cat-box"></div><span class="cat-label">🏳️‍🌈 LGBT+ Owned</span></label>
+          <label class="cat-check" onclick="toggleCat(this)"><input type="checkbox" value="Minority Owned"><div class="cat-box"></div><span class="cat-label">✊ Minority Owned</span></label>
+        </div>
+
+        <div class="section-sep">Video</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Platform</label>
+            <select id="f-platform">
+              <option value="instagram">Instagram</option>
+              <option value="tiktok">TikTok</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Link to Scot's Post *</label>
+            <input type="url" id="f-url" placeholder="https://...">
+          </div>
+        </div>
+
+        <button class="save-btn" id="save-btn" onclick="saveLocation()">
+          <div class="spinner" id="save-spinner"></div>
+          <span id="save-label">⚜ Save to Live Site</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: recent additions -->
+    <div class="right-panel">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Recently Added</h2>
+            <p>Last 5 locations saved to the database</p>
+          </div>
+        </div>
+        <div id="recent-list">
+          <div class="locations-loading"><div class="sp"></div>Loading...</div>
+        </div>
+      </div>
+
+      <!-- Info box -->
+      <div class="card">
+        <div class="card-header"><div><h2>How It Works</h2></div></div>
+        <div style="padding:16px 18px;font-size:0.75rem;line-height:1.8;opacity:0.6">
+          <p>1. Search for the place — real GPS coordinates auto-fill from Mapbox.</p>
+          <p style="margin-top:8px">2. Fill in the neighborhood, type, categories, and Scot's video link.</p>
+          <p style="margin-top:8px">3. Hit <strong style="color:var(--gold);opacity:1">Save to Live Site</strong> — the location is written directly to the database.</p>
+          <p style="margin-top:8px">4. The live website picks it up <strong style="color:var(--gold);opacity:1">within seconds</strong> — no GitHub, no code, no commits ever again.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ MANAGE TAB ══ -->
+<div id="tab-manage" class="tab-page">
+  <div style="max-width:900px;margin:0 auto;padding:28px 24px 80px;position:relative;z-index:1">
+    <div class="loc-list-header">
+      <h3>All Locations (<span id="manage-count">—</span>)</h3>
+      <input type="text" class="search-filter" id="manage-search" placeholder="Search locations..." oninput="filterManageList()">
+    </div>
+    <div class="card">
+      <div id="manage-list">
+        <div class="locations-loading"><div class="sp"></div>Loading...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SETUP TAB ══ -->
+<div id="tab-setup" class="tab-page">
+  <div class="setup-page">
+    <h2>Database Setup</h2>
+    <p class="intro">You only need to do this once. Run this SQL in your Supabase dashboard to create the locations table the site reads from.</p>
+
+    <div class="setup-step">
+      <div class="step-num-row"><div class="step-circle">1</div><div class="step-title">Go to Supabase SQL Editor</div></div>
+      <div class="step-body">In your Supabase dashboard, click <strong>SQL Editor</strong> in the left sidebar, then click <strong>New Query</strong>.</div>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-num-row"><div class="step-circle">2</div><div class="step-title">Run this SQL</div></div>
+      <div class="step-body">Copy and paste this entire block, then click <strong>Run</strong>. This creates the locations table and enables real-time updates.</div>
+      <div class="sql-block">
+        <button class="sql-copy" onclick="copySql(this)">Copy</button>
+        <pre id="sql-code">-- Create the locations table
+CREATE TABLE IF NOT EXISTS locations (
+  id            TEXT PRIMARY KEY,
+  name          TEXT NOT NULL,
+  neighborhood  TEXT NOT NULL,
+  type          TEXT NOT NULL,
+  emoji         TEXT DEFAULT '🍽',
+  lat           DOUBLE PRECISION NOT NULL,
+  lng           DOUBLE PRECISION NOT NULL,
+  categories    TEXT[] DEFAULT '{}',
+  description   TEXT DEFAULT '',
+  platform      TEXT DEFAULT 'instagram',
+  video_url     TEXT DEFAULT '',
+  created_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable Row Level Security (keeps data safe)
+ALTER TABLE locations ENABLE ROW LEVEL SECURITY;
+
+-- Allow anyone to read locations (public website)
+CREATE POLICY "Public can read locations"
+  ON locations FOR SELECT
+  USING (true);
+
+-- Allow anyone to insert locations (admin tool)
+CREATE POLICY "Anyone can insert locations"
+  ON locations FOR INSERT
+  WITH CHECK (true);
+
+-- Allow anyone to delete locations (admin tool)
+CREATE POLICY "Anyone can delete locations"
+  ON locations FOR DELETE
+  USING (true);
+
+-- Enable real-time updates
+ALTER PUBLICATION supabase_realtime ADD TABLE locations;</pre>
+      </div>
+      <div class="done-check">✓ Once this runs without errors, you're set up forever</div>
+    </div>
+
+    <div class="setup-step">
+      <div class="step-num-row"><div class="step-circle">3</div><div class="step-title">Switch to Add Location tab and start adding spots</div></div>
+      <div class="step-body">That's it. Every location you save here will appear on the live site within seconds.</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── KEYS ──
+mapboxgl.accessToken = 'pk.eyJ1Ijoic2NvdHBpbGlld3giLCJhIjoiY21sc29jZ2dyMDhjeDNsb2p0cDdpMWVuaCJ9.gATGe44FaJibU1AIguHMEQ';
+const SUPA_URL = 'https://zvqgojhixplchampqukt.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2cWdvamhpeHBsY2hhbXBxdWt0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0NTY0ODksImV4cCI6MjA4NzAzMjQ4OX0.FYglXx5BnBabcajHbhRobOKvRodJlzGGxOUaUpLpIJM';
+const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// ── STATE ──
+let selEmoji = '🍽';
+let selLat = null;
+let selLng = null;
+let adminMap = null;
+let adminMarker = null;
+let srchTimeout = null;
+let srchFeatures = [];
+let allLocations = [];
+
+// ── INIT ──
+checkConnection();
+loadAllLocations();
+
+async function checkConnection() {
+  try {
+    const { error } = await db.from('locations').select('id').limit(1);
+    if (error && error.code !== 'PGRST116') throw error;
+    setStatus(true);
+  } catch(e) {
+    setStatus(false);
+  }
+}
+
+function setStatus(ok) {
+  document.getElementById('db-dot').className = 'db-dot ' + (ok ? 'connected' : 'error');
+  document.getElementById('db-status-text').textContent = ok ? 'Connected' : 'Error';
+}
+
+// ── LOAD ALL LOCATIONS ──
+async function loadAllLocations() {
+  try {
+    const { data, error } = await db.from('locations').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    allLocations = data || [];
+    document.getElementById('total-count').textContent = allLocations.length;
+    renderRecent();
+    renderManageList();
+  } catch(e) {
+    document.getElementById('recent-list').innerHTML = '<div style="padding:20px;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;opacity:0.35;text-align:center">Run DB setup first ↗</div>';
+    document.getElementById('manage-list').innerHTML = '<div style="padding:20px;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;opacity:0.35;text-align:center">Run DB setup first ↗</div>';
+  }
+}
+
+// ── RENDER RECENT ──
+function renderRecent() {
+  const recent = allLocations.slice(0, 5);
+  if (!recent.length) {
+    document.getElementById('recent-list').innerHTML = '<div class="empty-list"><div class="ei">⚜</div>No locations yet<br>Add your first one!</div>';
+    return;
+  }
+  document.getElementById('recent-list').innerHTML = recent.map(loc => locRowHtml(loc, false)).join('');
+}
+
+// ── RENDER MANAGE LIST ──
+function renderManageList(filter = '') {
+  const filtered = filter
+    ? allLocations.filter(l => l.name.toLowerCase().includes(filter) || l.neighborhood.toLowerCase().includes(filter))
+    : allLocations;
+
+  document.getElementById('manage-count').textContent = filtered.length;
+
+  if (!filtered.length) {
+    document.getElementById('manage-list').innerHTML = '<div class="empty-list"><div class="ei">⚜</div>' + (filter ? 'No matches found' : 'No locations yet') + '</div>';
+    return;
+  }
+
+  document.getElementById('manage-list').innerHTML = filtered.map(loc => locRowHtml(loc, true)).join('');
+}
+
+function filterManageList() {
+  renderManageList(document.getElementById('manage-search').value.toLowerCase().trim());
+}
+
+function locRowHtml(loc, showDelete) {
+  const tags = (loc.categories || []).map(c => `<span class="lr-tag">${c}</span>`).join('');
+  return `
+    <div class="loc-row" id="row-${loc.id}">
+      <div class="lr-emoji">${loc.emoji}</div>
+      <div class="lr-info">
+        <div class="lr-name">${loc.name}</div>
+        <div class="lr-meta">${loc.neighborhood} · ${loc.type}</div>
+        <div class="lr-tags">${tags}</div>
+        <div class="lr-coords">${(loc.lat||0).toFixed(4)}, ${(loc.lng||0).toFixed(4)}</div>
+      </div>
+      ${showDelete ? `<button class="delete-btn" onclick="deleteLocation('${loc.id}', '${loc.name.replace(/'/g,"\\'")}')">✕</button>` : ''}
+    </div>`;
+}
+
+// ── ADDRESS SEARCH ──
+function onAddrInput() {
+  clearTimeout(srchTimeout);
+  const q = document.getElementById('f-address').value.trim();
+  if (q.length < 3) { hideSugg(); return; }
+  document.getElementById('search-hint').style.display = 'block';
+  srchTimeout = setTimeout(() => doSearch(q), 400);
+}
+
+async function doSearch(q) {
+  try {
+    const res = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(q)}.json?access_token=${mapboxgl.accessToken}&country=US&proximity=-90.0715,29.9511&limit=6`);
+    const data = await res.json();
+    document.getElementById('search-hint').style.display = 'none';
+    srchFeatures = data.features || [];
+    showSugg(srchFeatures);
+  } catch(e) {
+    document.getElementById('search-hint').style.display = 'none';
+  }
+}
+
+function showSugg(features) {
+  const box = document.getElementById('sugg-box');
+  if (!features.length) { box.style.display = 'none'; return; }
+  box.innerHTML = features.map((f,i) => `
+    <div class="sugg-item" onclick="pickPlace(${i})">
+      <div class="sn">${f.text || f.place_name}</div>
+      <div class="sa">${f.place_name}</div>
+    </div>`).join('');
+  box.style.display = 'block';
+}
+
+function hideSugg() { document.getElementById('sugg-box').style.display = 'none'; }
+
+function pickPlace(i) {
+  const f = srchFeatures[i];
+  if (!f) return;
+  selLng = f.center[0];
+  selLat = f.center[1];
+  document.getElementById('f-address').value = f.place_name;
+  if (!document.getElementById('f-name').value) document.getElementById('f-name').value = f.text || '';
+  document.getElementById('lat-pill').textContent = selLat.toFixed(6);
+  document.getElementById('lng-pill').textContent = selLng.toFixed(6);
+  document.getElementById('lat-pill').classList.add('set');
+  document.getElementById('lng-pill').classList.add('set');
+  hideSugg();
+  showMiniMap();
+}
+
+function showMiniMap() {
+  const el = document.getElementById('admin-map');
+  el.style.display = 'block';
+  if (!adminMap) {
+    adminMap = new mapboxgl.Map({ container: 'admin-map', style: 'mapbox://styles/mapbox/dark-v11', center: [selLng, selLat], zoom: 15 });
+    adminMap.on('load', placeMiniMarker);
+  } else {
+    adminMap.flyTo({ center: [selLng, selLat], zoom: 15 });
+    placeMiniMarker();
+  }
+}
+
+function placeMiniMarker() {
+  if (adminMarker) adminMarker.remove();
+  const el = document.createElement('div');
+  el.style.cssText = 'width:28px;height:28px;border-radius:50%;background:#C9A84C;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.5)';
+  el.textContent = selEmoji;
+  adminMarker = new mapboxgl.Marker(el).setLngLat([selLng, selLat]).addTo(adminMap);
+}
+
+document.addEventListener('click', e => { if (!e.target.closest('.address-wrap')) hideSugg(); });
+
+// ── EMOJI ──
+function pickEmoji(btn) {
+  document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  selEmoji = btn.dataset.e;
+  if (adminMarker) adminMarker.getElement().textContent = selEmoji;
+}
+
+// ── CATEGORIES ──
+function toggleCat(label) {
+  setTimeout(() => label.classList.toggle('on', label.querySelector('input').checked), 0);
+}
+
+function getSelectedCats() {
+  return [...document.querySelectorAll('.cat-check input:checked')].map(i => i.value);
+}
+
+// ── SAVE TO SUPABASE ──
+async function saveLocation() {
+  const name     = document.getElementById('f-name').value.trim();
+  const hood     = document.getElementById('f-hood').value;
+  const type     = document.getElementById('f-type').value;
+  const desc     = document.getElementById('f-desc').value.trim();
+  const platform = document.getElementById('f-platform').value;
+  const url      = document.getElementById('f-url').value.trim();
+  const cats     = getSelectedCats();
+
+  const errors = [];
+  if (!name)    errors.push('Name is required');
+  if (!hood)    errors.push('Neighborhood is required');
+  if (!type)    errors.push('Type is required');
+  if (!url)     errors.push('Video URL is required');
+  if (!selLat)  errors.push('Search and select a location above');
+  if (errors.length) { showToast('⚠ ' + errors[0], 'error'); return; }
+
+  // Make ID from name
+  const id = name.toLowerCase().replace(/[^a-z0-9\s]/g,'').trim().replace(/\s+/g,'-').substring(0,40) + '-' + Date.now().toString(36);
+
+  setSaving(true);
+
+  try {
+    const { error } = await db.from('locations').insert({
+      id,
+      name,
+      neighborhood: hood,
+      type,
+      emoji: selEmoji,
+      lat: selLat,
+      lng: selLng,
+      categories: cats,
+      description: desc,
+      platform,
+      video_url: url
+    });
+
+    if (error) throw error;
+
+    showToast(`✓ "${name}" is now live on the map!`, 'success');
+    resetForm();
+    loadAllLocations();
+
+  } catch(e) {
+    console.error(e);
+    showToast('Save failed — check DB Setup tab', 'error');
+  } finally {
+    setSaving(false);
+  }
+}
+
+function setSaving(on) {
+  const btn = document.getElementById('save-btn');
+  const spinner = document.getElementById('save-spinner');
+  const label = document.getElementById('save-label');
+  btn.disabled = on;
+  spinner.style.display = on ? 'block' : 'none';
+  label.textContent = on ? 'Saving...' : '⚜ Save to Live Site';
+}
+
+// ── DELETE ──
+async function deleteLocation(id, name) {
+  if (!confirm(`Remove "${name}" from the live site?`)) return;
+  try {
+    const { error } = await db.from('locations').delete().eq('id', id);
+    if (error) throw error;
+    showToast(`✓ "${name}" removed`, 'success');
+    loadAllLocations();
+  } catch(e) {
+    showToast('Delete failed', 'error');
+  }
+}
+
+// ── RESET FORM ──
+function resetForm() {
+  ['f-address','f-name','f-desc','f-url'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-hood').value = '';
+  document.getElementById('f-type').value = '';
+  document.getElementById('f-platform').value = 'instagram';
+  document.querySelectorAll('.cat-check').forEach(l => { l.classList.remove('on'); l.querySelector('input').checked = false; });
+  document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('sel'));
+  document.querySelector('[data-e="🍽"]').classList.add('sel');
+  selEmoji = '🍽'; selLat = null; selLng = null;
+  document.getElementById('lat-pill').textContent = '—';
+  document.getElementById('lng-pill').textContent = '—';
+  document.getElementById('lat-pill').classList.remove('set');
+  document.getElementById('lng-pill').classList.remove('set');
+  document.getElementById('admin-map').style.display = 'none';
+  if (adminMarker) { adminMarker.remove(); adminMarker = null; }
+}
+
+// ── TABS ──
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'manage') renderManageList(document.getElementById('manage-search').value.toLowerCase().trim());
+}
+
+// ── SQL COPY ──
+function copySql(btn) {
+  navigator.clipboard.writeText(document.getElementById('sql-code').textContent).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('done');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 2500);
+  });
+}
+
+// ── TOAST ──
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+
+</body>
+</html>
